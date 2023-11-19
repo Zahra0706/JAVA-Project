@@ -60,3 +60,80 @@ case 3:
                         commitChanges(localGitDirectory, filesToStage, commitMessage);
                         System.out.println("Mise en scène et commit terminés.");
                         break;
+                    case 5:
+                        System.out.print("Entrez le chemin complet du répertoire Git local : ");
+                        String gitDirectoryToCheckStatus = scanner.nextLine();
+                        checkGitStatus(gitDirectoryToCheckStatus);
+                        break;
+                    case 6:
+                        System.out.print("Entrez le chemin complet du répertoire Git local : ");
+                        String gitDirectory = scanner.nextLine();
+                        displayCommitHistory(gitDirectory);
+                        break;
+                    case 7:
+                        try {
+                            System.out.println("Pousser les dernières modifications de votre référentiel local vers le référentiel distant...");
+                            System.out.print("Entrez le chemin du référentiel local : ");
+                            String localRepoPath = scanner.nextLine();
+                            System.out.print("Entrez le nom du référentiel distant (par exemple, 'origin') : ");
+                            String remoteRepo = scanner.nextLine();
+                            String[] cmd = { "git", "push", remoteRepo };
+                            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+                            processBuilder.directory(new File(localRepoPath));
+                            Process process = processBuilder.start();
+                            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            String line;
+                            while ((line = outputReader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                            int exitCode = process.waitFor();
+                            if (exitCode == 0) {
+                                System.out.println("Poussée réussie vers le référentiel distant.");
+                            } else {
+                                System.out.println("Échec de la poussée vers le référentiel distant. Vérifiez les erreurs ci-dessus.");
+                            }
+
+                        } catch (IOException | InterruptedException e) {
+                            logger.severe("Une exception s'est produite : " + e.getMessage());
+                        }
+                        break;
+                    case 8:
+                        try {
+                            System.out.println("Effectuer un retirage depuis le référentiel distant...");
+                            System.out.print("Entrez le chemin du référentiel local : ");
+                            String localRepoPath = scanner.nextLine();
+                            System.out.print("Entrez le nom du référentiel distant (par exemple, 'origin') : ");
+                            String remoteRepo = scanner.nextLine();
+                            String[] cmd = { "git", "pull", remoteRepo };
+                            ProcessBuilder processBuilder = new ProcessBuilder(cmd);
+                            processBuilder.directory(new File(localRepoPath));
+                            Process process = processBuilder.start();
+                            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                            String line;
+                            while ((line = outputReader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                            int exitCode = process.waitFor();
+                            if (exitCode == 0) {
+                                System.out.println("retirage réussi depuis le référentiel distant.");
+                            } else {
+                                System.out.println("Échec du retirage depuis le référentiel distant");
+                            }
+
+                        } catch (IOException | InterruptedException e) {
+                            logger.severe("Une exception s'est produite : " + e.getMessage());
+                        }
+                        break;
+                    case 9:
+                        System.out.println("bye bye!");
+                        scanner.close();
+                        return;
+                    default:
+                        System.out.println("Choix invalide.");
+                }
+            }
+        } catch (Exception e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+
