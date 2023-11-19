@@ -36,3 +36,27 @@ public class javaApp {
                         String destinationDirectory = scanner.nextLine();
                         cloneGitRepository(gitRepoURL, destinationDirectory);
                         break;
+case 3:
+                        System.out.print("Entrez le chemin complet du répertoire Git local : ");
+                        String gitDirectoryToAddFile = scanner.nextLine();
+                        System.out.print("Entrez le chemin complet du fichier à ajouter (laissez vide pour créer un nouveau fichier) : ");
+                        String fileToAdd = scanner.nextLine();
+
+                        if (fileToAdd.isEmpty()) {
+                            System.out.print("Entrez le contenu du nouveau fichier : ");
+                            String fileContent = scanner.nextLine();
+                            fileToAdd = createAndWriteFile(gitDirectoryToAddFile, fileContent);
+                        }
+                        addFileToGit(gitDirectoryToAddFile, fileToAdd);
+                        break;
+                    case 4:
+                        System.out.print("Entrez le chemin complet du répertoire Git local : ");
+                        String localGitDirectory = scanner.nextLine();
+                        System.out.print("Entrez les fichiers à mettre en scène (séparés par des espaces) : ");
+                        String filesToStage = scanner.nextLine();
+                        System.out.print("Entrez le message de commit : ");
+                        String commitMessage = scanner.nextLine();
+
+                        commitChanges(localGitDirectory, filesToStage, commitMessage);
+                        System.out.println("Mise en scène et commit terminés.");
+                        break;
