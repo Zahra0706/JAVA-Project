@@ -136,4 +136,129 @@ case 3:
             logger.severe("Une exception s'est produite : " + e.getMessage());
         }
     }
+private static void commitChanges(String localGitDirectory, String filesToStage, String message) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "add", filesToStage);
+            processBuilder.directory(new File(localGitDirectory));
+            Process process = processBuilder.start();
+            process.waitFor();
 
+            ProcessBuilder commitProcessBuilder = new ProcessBuilder("git", "commit", "-m", message);
+            commitProcessBuilder.directory(new File(localGitDirectory));
+            Process commitProcess = commitProcessBuilder.start();
+            commitProcess.waitFor();
+
+            System.out.println("Commit avec le message : " + message + " terminé.");
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+    private static void displayCommitHistory(String gitDirectory) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "log");
+            processBuilder.directory(new File(gitDirectory));
+            Process process = processBuilder.start();
+            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            System.out.println("Historique des commits :");
+            while ((line = outputReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Le commit a réussi.");
+            } else {
+                System.out.println("Le commit a échoué");
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+    private static void cloneGitRepository(String gitRepoURL, String destinationDirectory) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "clone", gitRepoURL, destinationDirectory);
+            Process process = processBuilder.start();
+            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = outputReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            int exitCode = process.waitFor();
+            System.out.println("La commande Git a renvoyé le code de sortie : " + exitCode);
+
+            if (exitCode == 0) {
+                System.out.println("Le clonage du référentiel Git a réussi.");
+            } else {
+                System.out.println("Le clonage du référentiel Git a échoué");
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+    private static void createGitRepository(String directory) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "init");
+            processBuilder.directory(new File(directory));
+            Process process = processBuilder.start();
+            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            while ((line = outputReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Le nouveau repository a été créé avec succès.");
+            } else {
+                System.out.println("La création du repository a échoué.");
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+    private static String createAndWriteFile(String directory, String content) {
+        try {
+            File tempFile = File.createTempFile("newfile", ".txt", new File(directory));
+            tempFile.deleteOnExit(); // Supprimer le fichier temporaire lorsque le programme se termine
+            java.nio.file.Files.write(tempFile.toPath(), content.getBytes());
+            System.out.println("Le nouveau fichier a été créé : " + tempFile.getAbsolutePath());
+            return tempFile.getName();
+        } catch (IOException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+            return null;
+        }
+    }
+    private static void addFileToGit(String gitDirectory, String file) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "add", file);
+            processBuilder.directory(new File(gitDirectory));
+            Process process = processBuilder.start();
+            process.waitFor();
+
+            System.out.println("Le fichier " + file + " a été ajouté au dépôt Git.");
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+        }
+    }
+    private static void checkGitStatus(String gitDirectory) {
+        try {
+            ProcessBuilder processBuilder = new ProcessBuilder("git", "status");
+            processBuilder.directory(new File(gitDirectory));
+            Process process = processBuilder.start();
+            BufferedReader outputReader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            String line;
+            System.out.println("Statut du dépôt Git :");
+            while ((line = outputReader.readLine()) != null) {
+                System.out.println(line);
+            }
+            int exitCode = process.waitFor();
+            if (exitCode == 0) {
+                System.out.println("Statut du dépôt Git affiché avec succès.");
+            } else {
+                System.out.println("La commande Git status a échoué");
+            }
+        } catch (IOException | InterruptedException e) {
+            logger.severe("Une exception s'est produite : " + e.getMessage());
+}
+}
+
+}
